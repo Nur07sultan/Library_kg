@@ -4,15 +4,22 @@
 <p>{{ book_id.quantity_page }}</p>
 <p>{{ book_id.author }}</p>
 
-<iframe width="560" height="315" 
-        src="https://www.youtube.com/embed/BAEkDtvqi6A" 
-        title="YouTube video player" frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-        referrerpolicy="strict-origin-when-cross-origin" 
+{% if book_id.book_audio %}
+<iframe width="560" height="315"
+        src="{{ book_id.book_audio }}"
+        title="YouTube video player" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
         allowfullscreen>
 </iframe>
+{% endif %}
 
 <p>{{ book_id.created_at }}</p>
+
+
+
+
+
 
 
 

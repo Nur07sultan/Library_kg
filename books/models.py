@@ -7,6 +7,7 @@ class Books(models.Model):
     quantity_page = models.PositiveIntegerField(verbose_name='Количество страниц')
     author = models.CharField(max_length=100, blank=True, verbose_name='Автор книги')
     book_audio = models.URLField(blank=True, null=True, verbose_name='Ссылка на аудиокнигу')
+    book_url = models.URLField(blank=True, null=True, verbose_name='Ссылка на книгу')  # новое поле
     created_at = models.DateTimeField(auto_now_add=True, null=True) 
 
     def __str__(self):
@@ -15,3 +16,6 @@ class Books(models.Model):
     class Meta:
         verbose_name = 'книга'
         verbose_name_plural = 'книги'
+
+
+
