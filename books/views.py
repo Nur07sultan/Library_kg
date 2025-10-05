@@ -35,3 +35,5 @@ def about_me(request):
         return HttpResponse("Меня зовут Нурсултан, мне 17 лет. Я учусь в GEEKS 4 месяц на Bakend разработке.\n"
 "Так же занимаюсь боксом ")
 
+
+
