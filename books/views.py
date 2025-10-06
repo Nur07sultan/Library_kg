@@ -4,7 +4,7 @@ from django.utils import timezone
 import random
 from . import models 
 
-#Listview
+# === ListView ===
 def book_list_view(request):
     if request.method == 'GET':
         books = models.Books.objects.all()
@@ -13,15 +13,25 @@ def book_list_view(request):
         }
         return render(request, template_name='books/books_list.html', context=context)
     
-#Detailview
+# === DetailView с поддержкой отзывов ===
 def book_detail_view(request, id):
-    if request.method == 'GET':
-        book_id = get_object_or_404(models.Books, id=id)
-        context = {
-            'book_id': book_id,
-        }
-        return render(request, template_name='books/book_detail.html', context=context)
+    book = get_object_or_404(models.Books, id=id)
+    reviews = book.reviews.all()  # получаем все отзывы книги
 
+    # Обработка отправки нового отзыва
+    if request.method == "POST":
+        rating = int(request.POST.get('rating', 1))
+        text = request.POST.get('text', '')
+        if text:
+            models.Review.objects.create(book=book, rating=rating, text=text)
+
+    context = {
+        'book_id': book,
+        'reviews': reviews,
+    }
+    return render(request, template_name='books/book_detail.html', context=context)
+
+# === Прочие функции остаются без изменений ===
 def current_time(request):
     now = timezone.localtime(timezone.now())
     return HttpResponse(f"Текущее время: {now.strftime('%H:%M:%S')}")
@@ -32,8 +42,12 @@ def random_number(request):
 
 def about_me(request):
     if request.method == 'GET':
-        return HttpResponse("Меня зовут Нурсултан, мне 17 лет. Я учусь в GEEKS 4 месяц на Bakend разработке.\n"
-"Так же занимаюсь боксом ")
+        return HttpResponse(
+            "Меня зовут Нурсултан, мне 17 лет. Я учусь в GEEKS 4 месяц на Backend разработке.\n"
+            "Так же занимаюсь боксом "
+        )
+
+
 
 
 

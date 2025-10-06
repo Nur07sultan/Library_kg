@@ -1,8 +1,8 @@
 <h2>{{ book_id.title }}</h2>
 <img src="{{ book_id.image.url }}" alt="" width="400" height="350">
 <p>{{ book_id.description }}</p>
-<p>{{ book_id.quantity_page }}</p>
-<p>{{ book_id.author }}</p>
+<p>Количество страниц: {{ book_id.quantity_page }}</p>
+<p>Автор: {{ book_id.author }}</p>
 
 {% if book_id.book_audio %}
 <iframe width="560" height="315"
@@ -14,7 +14,33 @@
 </iframe>
 {% endif %}
 
-<p>{{ book_id.created_at }}</p>
+<p>Дата добавления: {{ book_id.created_at }}</p>
+
+<!-- === Средняя оценка книги === -->
+<p>Средняя оценка: {{ book_id.average_rating|floatformat:1 }}/5</p>
+
+<!-- === Отзывы === -->
+<h3>Отзывы</h3>
+<ul>
+  {% for review in reviews %}
+    <li>{{ review.rating }}/5 — {{ review.text }}</li>
+  {% empty %}
+    <li>Пока нет отзывов</li>
+  {% endfor %}
+</ul>
+
+<!-- === Форма добавления нового отзыва === -->
+<h3>Добавить отзыв</h3>
+<form method="post">
+  {% csrf_token %}
+  <label for="rating">Оценка (1-5):</label>
+  <input type="number" name="rating" min="1" max="5" value="5" required><br><br>
+  <label for="text">Отзыв:</label><br>
+  <textarea name="text" rows="4" cols="50" required></textarea><br><br>
+  <button type="submit">Отправить</button>
+</form>
+
+
 
 
 
