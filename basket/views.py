@@ -27,3 +27,15 @@ class OrderDeleteView(generic.DeleteView):
     template_name = 'basket/order_confirm_delete.html'
     success_url = reverse_lazy('basket:order_list')
 
+class OrderCreateView(generic.CreateView):
+    model = Order
+    form_class = OrderForm
+    template_name = 'basket/order_form.html'
+    success_url = reverse_lazy('basket:order_list')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        book_id = self.request.GET.get('book')
+        if book_id:
+            initial['book'] = book_id
+        return initial

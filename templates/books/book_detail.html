@@ -1,44 +1,45 @@
-<h2>{{ book_id.title }}</h2>
-<img src="{{ book_id.image.url }}" alt="" width="400" height="350">
-<p>{{ book_id.description }}</p>
-<p>Количество страниц: {{ book_id.quantity_page }}</p>
-<p>Автор: {{ book_id.author }}</p>
+{% extends "base.html" %}
 
-{% if book_id.book_audio %}
-<iframe width="560" height="315"
-        src="{{ book_id.book_audio }}"
-        title="YouTube video player" frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen>
-</iframe>
-{% endif %}
+{% block content %}
+<div style="display:flex; justify-content:center; margin-top:30px;">
+    <div style="background-color:#1e1e1e; padding:30px; border-radius:10px; max-width:700px; box-shadow:0 4px 12px rgba(0,0,0,0.7);">
+        <img src="{{ book_id.image.url }}" alt="{{ book_id.title }}" style="width:100%; border-radius:5px;">
+        <h2 style="color:#fff; margin-top:15px;">{{ book_id.title }}</h2>
+        <p style="color:#bbb;">Автор: {{ book_id.author }}</p>
+        <p style="color:#bbb;">Страницы: {{ book_id.quantity_page }}</p>
+        <p style="color:#bbb;">Описание: {{ book_id.description }}</p>
+        
+        {% if book_id.book_audio %}
+        <iframe width="100%" height="315" src="{{ book_id.book_audio }}" title="Аудиокнига"
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen style="margin-top:15px; border-radius:5px;"></iframe>
+        {% endif %}
 
-<p>Дата добавления: {{ book_id.created_at }}</p>
+        <p style="color:#bbb;">Дата добавления: {{ book_id.created_at|date:"Y-m-d H:i" }}</p>
+        <p style="color:#bbb;">Средняя оценка: {{ book_id.average_rating|floatformat:1 }}/5</p>
 
-<!-- === Средняя оценка книги === -->
-<p>Средняя оценка: {{ book_id.average_rating|floatformat:1 }}/5</p>
+        <h3 style="margin-top:20px;">Отзывы</h3>
+        <ul>
+          {% for review in reviews %}
+            <li>{{ review.rating }}/5 — {{ review.text }}</li>
+          {% empty %}
+            <li>Пока нет отзывов</li>
+          {% endfor %}
+        </ul>
 
-<!-- === Отзывы === -->
-<h3>Отзывы</h3>
-<ul>
-  {% for review in reviews %}
-    <li>{{ review.rating }}/5 — {{ review.text }}</li>
-  {% empty %}
-    <li>Пока нет отзывов</li>
-  {% endfor %}
-</ul>
+        <h3 style="margin-top:20px;">Добавить отзыв</h3>
+        <form method="post">
+          {% csrf_token %}
+          <input type="number" name="rating" min="1" max="5" value="5" required placeholder="Оценка (1-5)">
+          <textarea name="text" rows="4" required placeholder="Напишите отзыв"></textarea>
+          <button type="submit" class="btn btn-add">Отправить</button>
+        </form>
 
-<!-- === Форма добавления нового отзыва === -->
-<h3>Добавить отзыв</h3>
-<form method="post">
-  {% csrf_token %}
-  <label for="rating">Оценка (1-5):</label>
-  <input type="number" name="rating" min="1" max="5" value="5" required><br><br>
-  <label for="text">Отзыв:</label><br>
-  <textarea name="text" rows="4" cols="50" required></textarea><br><br>
-  <button type="submit">Отправить</button>
-</form>
+        <a href="{% url 'basket:order_add' %}?book={{ book_id.id }}" class="btn btn-add" style="margin-top:15px;">Добавить в заказ</a>
+    </div>
+</div>
+{% endblock %}
+
 
 
 

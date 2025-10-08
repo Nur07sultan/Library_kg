@@ -1,48 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Заказы</h1>
+<h1 style="text-align:center; margin-bottom:30px;">Мои заказы</h1>
 
-<p><a href="{% url 'basket:order_add' %}">Добавить заказ</a></p>
+<div style="text-align:right; margin-bottom:20px;">
+    <a href="{% url 'basket:order_add' %}" class="btn btn-add">Добавить заказ</a>
+</div>
 
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Покупатель</th>
-      <th>Книга</th>
-      <th>Кол-во</th>
-      <th>Статус</th>
-      <th>Дата</th>
-      <th>Действия</th>
-    </tr>
-  </thead>
-  <tbody>
+<div class="books-grid">
   {% for order in orders %}
-    <tr>
-      <td>{{ order.id }}</td>
-      <td>{{ order.customer_name }}</td>
-      <td>{{ order.book }}</td>
-      <td>{{ order.quantity }}</td>
-      <td>{{ order.get_status_display }}</td>
-      <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
-      <td>
-        <a href="{% url 'basket:order_edit' order.pk %}">Редактировать</a> |
-        <a href="{% url 'basket:order_delete' order.pk %}">Удалить</a>
-      </td>
-    </tr>
+  <div class="book-card">
+      <h2>{{ order.book.title }}</h2>
+      <p>Покупатель: {{ order.customer_name }}</p>
+      <p>Кол-во: {{ order.quantity }}</p>
+      <p>Статус: {{ order.get_status_display }}</p>
+      <p>Дата: {{ order.created_at|date:"Y-m-d H:i" }}</p>
+
+      <a href="{% url 'basket:order_edit' order.pk %}" class="btn btn-edit">Редактировать</a>
+      <a href="{% url 'basket:order_delete' order.pk %}" class="btn btn-delete">Удалить</a>
+  </div>
   {% empty %}
-    <tr><td colspan="7">Заказов нет</td></tr>
+    <p style="text-align:center; color:#bbb;">Заказов нет</p>
   {% endfor %}
-  </tbody>
-</table>
+</div>
 
 {% if is_paginated %}
-  <div class="pagination">
-    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">предыдущая</a>{% endif %}
-    <span>Стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
-    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">следующая</a>{% endif %}
-  </div>
+<div style="text-align:center; margin-top:20px;">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" class="btn btn-orders">Предыдущая</a>{% endif %}
+    <span style="margin:0 10px;">Стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" class="btn btn-orders">Следующая</a>{% endif %}
+</div>
 {% endif %}
-
 {% endblock %}
+
