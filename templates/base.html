@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
+    <head>
+
+    {% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Library.kg{% endblock %}</title>
@@ -45,7 +50,7 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        .book-card {
+       .book-card {
             background-color: #1e1e1e;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.7);
@@ -56,13 +61,15 @@
             vertical-align: top;
             transition: transform 0.3s, box-shadow 0.3s;
         }
+
         .book-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 20px rgba(0,0,0,0.8);
         }
         .book-card img {
             width: 100%;
-            height: auto;
+            height: 420px; 
+            object-fit: cover; 
             border-radius: 5px;
         }
         .book-card h2 {

@@ -1,41 +1,54 @@
-from django.urls import reverse_lazy
-from django.views import generic
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.core.paginator import Paginator
 from .models import Order
 from .forms import OrderForm
 
-class OrderListView(generic.ListView):
-    model = Order
-    template_name = 'basket/order_list.html'
-    context_object_name = 'orders'
-    paginate_by = 10
-    ordering = ['-created_at']
 
-class OrderCreateView(generic.CreateView):
-    model = Order
-    form_class = OrderForm
-    template_name = 'basket/order_form.html'
-    success_url = reverse_lazy('basket:order_list')
+# === Список заказов ===
+def order_list(request):
+    orders = Order.objects.all().order_by('-created_at')
+    paginator = Paginator(orders, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-class OrderUpdateView(generic.UpdateView):
-    model = Order
-    form_class = OrderForm
-    template_name = 'basket/order_form.html'
-    success_url = reverse_lazy('basket:order_list')
+    return render(request, 'basket/order_list.html', {
+        'orders': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'page_obj': page_obj
+    })
 
-class OrderDeleteView(generic.DeleteView):
-    model = Order
-    template_name = 'basket/order_confirm_delete.html'
-    success_url = reverse_lazy('basket:order_list')
 
-class OrderCreateView(generic.CreateView):
-    model = Order
-    form_class = OrderForm
-    template_name = 'basket/order_form.html'
-    success_url = reverse_lazy('basket:order_list')
+# === Создание нового заказа ===
+def order_add(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('basket:order_list')
+    else:
+        form = OrderForm()
+    return render(request, 'basket/order_form.html', {'form': form})
 
-    def get_initial(self):
-        initial = super().get_initial()
-        book_id = self.request.GET.get('book')
-        if book_id:
-            initial['book'] = book_id
-        return initial
+
+# === Редактирование заказа ===
+def order_edit(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    if request.method == 'POST':
+        form = OrderForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('basket:order_list')
+    else:
+        form = OrderForm(instance=order)
+    return render(request, 'basket/order_form.html', {'form': form})
+
+
+# === Удаление заказа ===
+def order_delete(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    if request.method == 'POST':
+        order.delete()
+        return redirect('basket:order_list')
+    return render(request, 'basket/order_confirm_delete.html', {'order': order})
+
