@@ -7,6 +7,10 @@ services:
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: Librarykg.settings
+      - key: PYTHONPATH
+        value: /opt/render/project/src
+
+
 
 
 
