@@ -2,10 +2,11 @@ services:
   - type: web
     name: library-kg
     env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn librarykg.wsgi:application"
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "gunicorn Librarykg.wsgi:application"
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: librarykg.settings
+        value: Librarykg.settings
+
 
 
