@@ -1,27 +1,45 @@
 from django.contrib import admin
-from . import models
+from .models import Books, Review, Tour, Registration, Episode
 
-# === Книги ===
-@admin.register(models.Books)
+class EpisodeInline(admin.TabularInline):
+    model = Episode
+    extra = 1
+    fields = ('order', 'title', 'video_url', 'video_file')
+    ordering = ('order',)
+
+@admin.register(Books)
 class BooksAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'quantity_page', 'created_at')
+    search_fields = ('title', 'author')
+    list_filter = ('created_at',)
+    inlines = [EpisodeInline]
 
-# === Отзывы ===
-@admin.register(models.Review)
+@admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('book', 'rating', 'text')
+    list_filter = ('rating',)
+    search_fields = ('book__title', 'text')
 
-# === Туры ===
-@admin.register(models.Tour)
+@admin.register(Tour)
 class TourAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
-# === Регистрации ===
-@admin.register(models.Registration)
+@admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'tour')  # здесь вместо user теперь full_name
-    search_fields = ('full_name',)       # можно искать по имени участника
-    list_filter = ('tour',)              # фильтр по туру
+    list_display = ('full_name', 'tour')
+    search_fields = ('full_name', 'tour__name')
+
+@admin.register(Episode)
+class EpisodeAdmin(admin.ModelAdmin):
+    list_display = ('book', 'order', 'title', 'video_url', 'video_file')
+    list_filter = ('book',)
+    search_fields = ('book__title', 'title')
+    ordering = ('book', 'order')
+
+
+
+
+
 
 
 

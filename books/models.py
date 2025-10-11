@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.auth.models import User
 
 # === Модель книги ===
 class Books(models.Model):
@@ -67,6 +66,28 @@ class Registration(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['full_name'], name='unique_participant')
         ]
+
+
+# === Модель серий видео ===
+class Episode(models.Model):
+    book = models.ForeignKey(Books, on_delete=models.CASCADE, related_name='episodes', verbose_name='Книга')
+    title = models.CharField(max_length=100, verbose_name='Название серии')
+    order = models.PositiveIntegerField(default=1, verbose_name='Порядок серии')
+    video_url = models.URLField(blank=True, null=True, verbose_name='Ссылка на видео (YouTube или др.)')
+    video_file = models.FileField(upload_to='episodes/', blank=True, null=True, verbose_name='Локальный файл видео')
+
+    def __str__(self):
+        return f"{self.book.title} - Серия {self.order}: {self.title}"
+
+    class Meta:
+        verbose_name = 'серия'
+        verbose_name_plural = 'серии'
+        ordering = ['order']
+
+
+
+
+
 
 
  

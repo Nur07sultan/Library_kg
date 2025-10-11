@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
-    <head>
-
-    {% load static %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-
 <head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
     <meta charset="UTF-8">
     <title>{% block title %}Library.kg{% endblock %}</title>
     <style>
@@ -50,7 +48,7 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-       .book-card {
+        .book-card {
             background-color: #1e1e1e;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.7);
@@ -61,7 +59,6 @@
             vertical-align: top;
             transition: transform 0.3s, box-shadow 0.3s;
         }
-
         .book-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 20px rgba(0,0,0,0.8);
@@ -153,6 +150,17 @@
         <nav>
             <a href="/">Главная</a>
             <a href="{% url 'basket:order_list' %}" class="btn btn-orders">Мои заказы</a>
+
+            {% if user.is_authenticated %}
+                <!-- Показываем полное имя пользователя -->
+                <span style="margin-left:20px; font-weight:bold;">
+                    {{ user.first_name }} {{ user.last_name }}
+                </span>
+                <a href="{% url 'accounts:logout' %}" class="btn btn-delete" style="margin-left:10px;">Выйти</a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="btn btn-add" style="margin-left:10px;">Войти</a>
+                <a href="{% url 'accounts:register' %}" class="btn btn-add" style="margin-left:10px;">Регистрация</a>
+            {% endif %}
         </nav>
     </header>
 
@@ -165,5 +173,6 @@
     </footer>
 </body>
 </html>
+
 
 

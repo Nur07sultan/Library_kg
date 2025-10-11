@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 style="text-align:center; margin-bottom:30px;">Профиль</h1>
+<div style="max-width:600px; margin:auto; background:rgba(25,25,25,0.9); padding:25px; border-radius:15px;">
+    <p><strong>Инициалы:</strong> {{ user.initials }}</p>
+    <p><strong>Имя:</strong> {{ user.first_name }}</p>
+    <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+    <p><strong>Отчество:</strong> {{ user.middle_name }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Телефон:</strong> {{ user.phone_number }}</p>
+    <p><strong>Город:</strong> {{ user.city }}</p>
+    <p><strong>Образование:</strong> {{ user.education }}</p>
+    <p><strong>Должность:</strong> {{ user.position_applied }}</p>
+    <p><strong>Опыт:</strong> {{ user.experience_years }} лет</p>
+    <p><strong>GitHub:</strong> <a href="{{ user.github_link }}" target="_blank">{{ user.github_link }}</a></p>
+    <p><strong>Портфолио:</strong> <a href="{{ user.portfolio_link }}" target="_blank">{{ user.portfolio_link }}</a></p>
+    <div style="text-align:center; margin-top:15px;">
+        <a href="{% url 'logout' %}" class="btn btn-danger">Выйти</a>
+    </div>
+</div>
+{% endblock %}
