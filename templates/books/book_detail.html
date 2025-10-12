@@ -19,11 +19,16 @@
         <p style="color:#bbb;">Средняя оценка: {{ book.average_rating|floatformat:1 }}/5</p>
 
         {% if episodes %}
-        <h3 style="margin-top:20px;">Сериалы</h3>
+        <h3 style="margin-top:20px;">Серии</h3>
         <ul style="list-style:none; padding:0; display:flex; flex-wrap:wrap;">
             {% for episode in episodes %}
             <li style="margin-right:10px; margin-bottom:10px;">
-                <button class="btn btn-add" onclick="showEpisode('{{ episode.id }}')">{{ episode.title }}</button>
+                <button 
+                    id="episode-{{ episode.id }}" 
+                    class="episode-btn btn btn-add"
+                    onclick="showEpisode('{{ episode.id }}')">
+                    {{ episode.title }}
+                </button>
             </li>
             {% endfor %}
         </ul>
@@ -33,30 +38,42 @@
         <h3 style="margin-top:20px;">Отзывы</h3>
         <ul>
             {% for review in reviews %}
-                <li>{{ review.rating }}/5 — {{ review.text }}</li>
+                <li style="color:#ccc;">{{ review.rating }}/5 — {{ review.text }}</li>
             {% empty %}
-                <li>Пока нет отзывов</li>
+                <li style="color:#888;">Пока нет отзывов</li>
             {% endfor %}
         </ul>
 
         <h3 style="margin-top:20px;">Добавить отзыв</h3>
         <form method="post">
-          {% csrf_token %}
-          <input type="number" name="rating" min="1" max="5" value="5" required placeholder="Оценка (1-5)">
-          <textarea name="text" rows="4" required placeholder="Напишите отзыв"></textarea>
-          <button type="submit" class="btn btn-add">Отправить</button>
+            {% csrf_token %}
+            <input type="number" name="rating" min="1" max="5" value="5" required placeholder="Оценка (1-5)">
+            <textarea name="text" rows="4" required placeholder="Напишите отзыв"></textarea>
+            <button type="submit" class="btn btn-add">Отправить</button>
         </form>
 
         <a href="{% url 'basket:order_add' %}?book={{ book.id }}" class="btn btn-add" style="margin-top:15px;">Добавить в заказ</a>
     </div>
 </div>
 
+<style>
+/* Зеленая кнопка для текущей серии */
+.episode-btn.current {
+    background-color: #00ff00 !important;
+    color: black !important;
+    font-weight: bold;
+    box-shadow: 0 0 12px #00ff00;
+    transform: scale(1.05);
+    transition: all 0.2s ease-in-out;
+}
+</style>
+
 <script>
 const episodesData = {
     {% for episode in episodes %}
     "{{ episode.id }}": {
-        {% if episode.video_url %}
-        "url": "{{ episode.video_url }}",
+        {% if episode.embed_url %}
+        "url": "{{ episode.embed_url }}",
         "type": "iframe"
         {% elif episode.video_file %}
         "url": "{{ episode.video_file.url }}",
@@ -70,24 +87,47 @@ const episodesData = {
 };
 
 function showEpisode(id) {
+    // Снимаем класс 'current' со всех кнопок
+    document.querySelectorAll('.episode-btn').forEach(btn => btn.classList.remove('current'));
+
+    // Присваиваем 'current' выбранной кнопке
+    const activeBtn = document.getElementById('episode-' + id);
+    if(activeBtn) activeBtn.classList.add('current');
+
+    // Подставляем видео
     const container = document.getElementById('episode-player');
     const ep = episodesData[id];
     let html = '';
-    if(ep.type === 'iframe') {
+
+    if (ep.type === 'iframe') {
         html = `<iframe width="100%" height="480" src="${ep.url}" frameborder="0" allowfullscreen style="border-radius:5px;"></iframe>`;
-    } else if(ep.type === 'video') {
+    } else if (ep.type === 'video') {
         html = `<video width="100%" height="480" controls style="border-radius:5px;">
                     <source src="${ep.url}" type="video/mp4">
                     Ваш браузер не поддерживает просмотр видео.
                 </video>`;
     } else {
-        html = '<p>Видео отсутствует</p>';
+        html = '<p style="color:#bbb;">Видео отсутствует</p>';
     }
+
     container.innerHTML = html;
-    window.scrollTo({top: container.offsetTop - 20, behavior: 'smooth'});
+    window.scrollTo({ top: container.offsetTop - 20, behavior: 'smooth' });
 }
+
+// Автозапуск первой серии при загрузке
+window.addEventListener('DOMContentLoaded', () => {
+    const firstEpisodeId = Object.keys(episodesData)[0];
+    if(firstEpisodeId) showEpisode(firstEpisodeId);
+});
 </script>
 {% endblock %}
+
+
+
+
+
+
+
 
 
 

@@ -73,11 +73,20 @@ class Episode(models.Model):
     book = models.ForeignKey(Books, on_delete=models.CASCADE, related_name='episodes', verbose_name='Книга')
     title = models.CharField(max_length=100, verbose_name='Название серии')
     order = models.PositiveIntegerField(default=1, verbose_name='Порядок серии')
-    video_url = models.URLField(blank=True, null=True, verbose_name='Ссылка на видео (YouTube или др.)')
+    video_url = models.URLField(blank=True, null=True, verbose_name='Ссылка на видео (YouTube, Rutube и т.д.)')
     video_file = models.FileField(upload_to='episodes/', blank=True, null=True, verbose_name='Локальный файл видео')
 
     def __str__(self):
         return f"{self.book.title} - Серия {self.order}: {self.title}"
+
+    def embed_url(self):
+        """Возвращает ссылку, подходящую для iframe"""
+        if self.video_url:
+            if "youtube.com/watch?v=" in self.video_url:
+                return self.video_url.replace("watch?v=", "embed/")
+            elif "rutube.ru/video/" in self.video_url:
+                return self.video_url.replace("rutube.ru/video/", "rutube.ru/play/embed/").split("?")[0]
+        return self.video_url
 
     class Meta:
         verbose_name = 'серия'
