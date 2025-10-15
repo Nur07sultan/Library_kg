@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Женская одежда</h1>
+{% for item in items %}
+  <div>
+    <h2>{{ item.title }}</h2>
+    <p>{{ item.description }}</p>
+    <p><b>{{ item.price }}</b> сом</p>
+    {% if item.image %}
+      <img src="{{ item.image.url }}" width="150">
+    {% endif %}
+  </div>
+{% empty %}
+  <p>Пока нет женской одежды.</p>
+{% endfor %}
+{% endblock %}

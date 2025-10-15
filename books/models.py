@@ -93,18 +93,3 @@ class Episode(models.Model):
         verbose_name_plural = 'серии'
         ordering = ['order']
 
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-

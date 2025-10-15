@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'basket',
     'accounts',
     'captcha',
+    'clothes',
+    
 ]
 
 

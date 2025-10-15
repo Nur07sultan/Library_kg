@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Магазин одежды</h1>
+
+<form method="get" action="{% url 'search_clothes' %}">
+  <input type="text" name="q" placeholder="Поиск по названию...">
+  <button type="submit">Искать</button>
+</form>
+
+<hr>
+
+<h2>Категории:</h2>
+<ul>
+  <li><a href="{% url 'men_clothes' %}">Мужская одежда</a></li>
+  <li><a href="{% url 'women_clothes' %}">Женская одежда</a></li>
+  <li><a href="{% url 'kids_clothes' %}">Детская одежда</a></li>
+</ul>
+
+<hr>
+
+<h2>Вся одежда:</h2>
+{% for item in items %}
+  <div>
+    <h3>{{ item.title }}</h3>
+    <p>{{ item.description }}</p>
+    <p><b>{{ item.price }}</b> сом</p>
+    {% if item.image %}
+      <img src="{{ item.image.url }}" width="150">
+    {% endif %}
+  </div>
+{% empty %}
+  <p>Товаров пока нет.</p>
+{% endfor %}
+
+{% endblock %}
