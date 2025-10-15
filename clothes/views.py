@@ -26,3 +26,47 @@ def all_clothes(request):
     return render(request, 'clothes/all.html', {'items': items})
 
 
+
+
+from django.http import JsonResponse
+from django.core.serializers import serialize
+
+def clothes_ajax(request):
+    # category: all / men / women / kids
+    category = request.GET.get('category', 'all')
+    q = request.GET.get('q', '').strip()
+
+    items = Clothes.objects.all()
+
+    if category == 'men':
+        try:
+            cat = Category.objects.get(name="Одежда мужская")
+            items = items.filter(categories=cat)
+        except Category.DoesNotExist:
+            items = items.none()
+    elif category == 'women':
+        try:
+            cat = Category.objects.get(name="Одежда женская")
+            items = items.filter(categories=cat)
+        except Category.DoesNotExist:
+            items = items.none()
+    elif category == 'kids':
+        try:
+            cat = Category.objects.get(name="Детская одежда")
+            items = items.filter(categories=cat)
+        except Category.DoesNotExist:
+            items = items.none()
+
+    if q:
+        items = items.filter(title__icontains=q)
+
+    data = []
+    for it in items:
+        data.append({
+            'id': it.id,
+            'title': it.title,
+            'description': it.description or '',
+            'price': str(it.price),
+            'image': it.image.url if it.image else '',
+        })
+    return JsonResponse({'items': data})

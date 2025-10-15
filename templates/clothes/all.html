@@ -3,34 +3,94 @@
 
 <h1>Магазин одежды</h1>
 
-<form method="get" action="{% url 'search_clothes' %}">
-  <input type="text" name="q" placeholder="Поиск по названию...">
-  <button type="submit">Искать</button>
-</form>
+<div class="shop-controls">
+  <input id="search-input" type="text" placeholder="Поиск по названию..." />
+  <button id="search-btn">Искать</button>
+</div>
 
 <hr>
 
-<h2>Категории:</h2>
-<ul>
-  <li><a href="{% url 'men_clothes' %}">Мужская одежда</a></li>
-  <li><a href="{% url 'women_clothes' %}">Женская одежда</a></li>
-  <li><a href="{% url 'kids_clothes' %}">Детская одежда</a></li>
-</ul>
+<div class="shop-filters">
+  <button class="filter-btn" data-category="all">Все</button>
+  <button class="filter-btn" data-category="men">Мужская</button>
+  <button class="filter-btn" data-category="women">Женская</button>
+  <button class="filter-btn" data-category="kids">Детская</button>
+</div>
 
 <hr>
 
-<h2>Вся одежда:</h2>
-{% for item in items %}
-  <div>
-    <h3>{{ item.title }}</h3>
-    <p>{{ item.description }}</p>
-    <p><b>{{ item.price }}</b> сом</p>
-    {% if item.image %}
-      <img src="{{ item.image.url }}" width="150">
-    {% endif %}
-  </div>
-{% empty %}
-  <p>Товаров пока нет.</p>
-{% endfor %}
+<div id="items-container" class="items-grid">
+  {% for item in items %}
+    <div class="card" data-id="{{ item.id }}">
+      {% if item.image %}<img src="{{ item.image.url }}" alt="{{ item.title }}">{% endif %}
+      <h3>{{ item.title }}</h3>
+      <p class="price"><b>{{ item.price }}</b> сом</p>
+      <p class="desc">{{ item.description|truncatechars:100 }}</p>
+    </div>
+  {% empty %}
+    <p>Товаров пока нет.</p>
+  {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const container = document.getElementById('items-container');
+  const searchInput = document.getElementById('search-input');
+  const searchBtn = document.getElementById('search-btn');
+  let currentCategory = 'all';
+
+  function renderItems(items){
+    container.innerHTML = '';
+    if(items.length === 0){
+      container.innerHTML = '<p>Ничего не найдено.</p>';
+      return;
+    }
+    items.forEach(it => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = (it.image? '<img src="'+it.image+'" alt="'+it.title+'">': '') +
+                      '<h3>'+it.title+'</h3>' +
+                      '<p class="price"><b>'+it.price+'</b> сом</p>' +
+                      '<p class="desc">'+it.description.substring(0,200)+'</p>';
+      container.appendChild(div);
+    });
+  }
+
+  function fetchItems(){
+    const q = encodeURIComponent(searchInput.value.trim());
+    fetch(`/clothes/ajax/?category=${currentCategory}&q=${q}`)
+      .then(r => r.json())
+      .then(data => renderItems(data.items))
+      .catch(err => console.error(err));
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentCategory = btn.dataset.category;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      fetchItems();
+    });
+  });
+
+  searchBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    fetchItems();
+  });
+
+  searchInput.addEventListener('keyup', (e) => {
+    if(e.key === 'Enter') fetchItems();
+  });
+});
+</script>
+
+<style>
+.items-grid{ display:flex; flex-wrap:wrap; gap:16px; }
+.card{ background:#1e1e1e; padding:12px; border-radius:8px; width:220px; box-shadow:0 4px 10px rgba(0,0,0,0.5); }
+.card img{ width:100%; height:150px; object-fit:cover; border-radius:6px; }
+.filter-btn{ margin-right:8px; padding:8px 12px; border-radius:6px; background:#272727; color:#fff; border:none; cursor:pointer; }
+.filter-btn.active{ outline:2px solid #6c5ce7; }
+.shop-controls{ margin-bottom:12px; }
+</style>
 
 {% endblock %}

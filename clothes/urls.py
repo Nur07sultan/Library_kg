@@ -7,5 +7,6 @@ urlpatterns = [
     path('women/', views.women_clothes, name='women_clothes'),
     path('kids/', views.kids_clothes, name='kids_clothes'),
     path('search/', views.search_clothes, name='search_clothes'),
+    , path('ajax/', views.clothes_ajax, name='clothes_ajax')
 ]
 
