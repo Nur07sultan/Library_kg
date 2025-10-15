@@ -10,7 +10,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-
 class Clothes(models.Model):
     title = models.CharField("Название одежды", max_length=200)
     description = models.TextField("Описание", blank=True, null=True)
@@ -24,4 +23,6 @@ class Clothes(models.Model):
 
     def __str__(self):
         return self.title
+
+
 

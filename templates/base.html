@@ -149,10 +149,10 @@
     <header>
         <nav>
             <a href="/">Главная</a>
+            <a href="/clothes/" class="btn btn-add">Магазин</a> <!-- кнопка Магазин сверху -->
             <a href="{% url 'basket:order_list' %}" class="btn btn-orders">Мои заказы</a>
 
             {% if user.is_authenticated %}
-                <!-- Показываем полное имя пользователя -->
                 <span style="margin-left:20px; font-weight:bold;">
                     {{ user.first_name }} {{ user.last_name }}
                 </span>
@@ -174,10 +174,12 @@
 </body>
 </html>
 
-<nav>
-  <a href="/">Главная</a>
-  <a href="/books/">Книги</a>
-  <a href="/clothes/">Магазин</a>
-</nav>
+
+
+
+
+
+
+
 
 

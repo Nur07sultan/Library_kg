@@ -1,17 +1,32 @@
 {% extends 'base.html' %}
+
+{% block title %}Мужская одежда{% endblock %}
+
 {% block content %}
 <h1>Мужская одежда</h1>
-{% for item in items %}
-  <div>
-    <h2>{{ item.title }}</h2>
-    <p>{{ item.description }}</p>
-    <p><b>{{ item.price }}</b> сом</p>
-    {% if item.image %}
-      <img src="{{ item.image.url }}" width="150">
+
+<div class="books-grid">
+    {% if items %}
+        {% for item in items %}
+            <div class="book-card">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                {% else %}
+                    <img src="{% static 'images/default.png' %}" alt="Нет изображения">
+                {% endif %}
+                <h2>{{ item.title }}</h2>
+                {% if item.description %}
+                    <p>{{ item.description|truncatewords:15 }}</p>
+                {% endif %}
+                <p>Цена: {{ item.price }} сом</p>
+                <a href="{% url 'clothes:item_detail' item.id %}" class="btn btn-add">Подробнее</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Товары не найдены.</p>
     {% endif %}
-  </div>
-{% empty %}
-  <p>Пока нет мужской одежды.</p>
-{% endfor %}
+</div>
 {% endblock %}
+
+
 

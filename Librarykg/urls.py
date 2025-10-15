@@ -11,7 +11,7 @@ urlpatterns = [
     path('basket/', include('basket.urls', namespace='basket')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('captcha/', include('captcha.urls')),  
-    path('clothes/', include('clothes.urls')),
+    path('clothes/', include('clothes.urls', namespace='clothes')),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
