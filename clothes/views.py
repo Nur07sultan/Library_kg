@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
 from .models import Clothes, Category
 
 def all_clothes(request):
@@ -23,38 +22,12 @@ def kids_clothes(request):
 
 def search_clothes(request):
     query = request.GET.get('q', '')
-    items = Clothes.objects.filter(title__icontains=query) if query else []
+    items = Clothes.objects.filter(title__icontains=query) if query else Clothes.objects.none()
     return render(request, 'clothes/search.html', {'items': items, 'query': query})
 
-def clothes_ajax(request):
-    category = request.GET.get('category', 'all')
-    q = request.GET.get('q', '').strip()
-
-    items = Clothes.objects.all()
-    if category != 'all':
-        cat_map = {
-            'men': "Одежда мужская",
-            'women': "Одежда женская",
-            'kids': "Детская одежда"
-        }
-        try:
-            cat = Category.objects.get(name=cat_map[category])
-            items = items.filter(categories=cat)
-        except Category.DoesNotExist:
-            items = items.none()
-
-    if q:
-        items = items.filter(title__icontains=q)
-
-    data = [{
-        'id': it.id,
-        'title': it.title,
-        'description': it.description or '',
-        'price': str(it.price),
-        'image': it.image.url if it.image else '',
-    } for it in items]
-
-    return JsonResponse({'items': data})
+def item_detail(request, item_id):
+    item = get_object_or_404(Clothes, id=item_id)
+    return render(request, 'clothes/detail.html', {'item': item})
 
 
 

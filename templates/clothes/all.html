@@ -1,9 +1,23 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Магазин{% endblock %}
+{% block title %}Магазин одежды{% endblock %}
 
 {% block content %}
 <h1>Все товары</h1>
+
+<!-- Поиск -->
+<form method="get" action="{% url 'clothes:search_clothes' %}" style="margin-bottom:20px;">
+    <input type="text" name="q" placeholder="Поиск по названию..." value="{{ request.GET.q }}">
+    <button type="submit" class="btn btn-add">Искать</button>
+</form>
+
+<!-- Фильтры -->
+<div class="filters" style="margin-bottom:20px;">
+    <a href="{% url 'clothes:men_clothes' %}" class="btn btn-add">Мужская одежда</a>
+    <a href="{% url 'clothes:women_clothes' %}" class="btn btn-add">Женская одежда</a>
+    <a href="{% url 'clothes:kids_clothes' %}" class="btn btn-add">Детская одежда</a>
+</div>
 
 <div class="books-grid">
     {% if items %}
@@ -23,10 +37,13 @@
             </div>
         {% endfor %}
     {% else %}
-        <p>Товары не найдены.</p>
+        <p>Товаров пока нет.</p>
     {% endif %}
 </div>
 {% endblock %}
+
+
+
 
 
 

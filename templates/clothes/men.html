@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Мужская одежда{% endblock %}
 
@@ -23,10 +24,11 @@
             </div>
         {% endfor %}
     {% else %}
-        <p>Товары не найдены.</p>
+        <p>Пока нет мужской одежды.</p>
     {% endif %}
 </div>
 {% endblock %}
+
 
 
 

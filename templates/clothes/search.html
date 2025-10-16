@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Поиск{% endblock %}
 
@@ -23,10 +24,11 @@
             </div>
         {% endfor %}
     {% else %}
-        <p>Товары не найдены.</p>
+        <p>Товаров не найдено.</p>
     {% endif %}
 </div>
 {% endblock %}
+
 
 
 

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>{{ item.title }}</h1>
+{% if item.image %}
+    <img src="{{ item.image.url }}" alt="{{ item.title }}">
+{% else %}
+    <img src="{% static 'images/default.png' %}" alt="Нет изображения">
+{% endif %}
+<p>{{ item.description }}</p>
+<p>Цена: {{ item.price }} сом</p>
+<a href="{% url 'clothes:all_clothes' %}" class="btn btn-add">← Назад к магазина</a>
+{% endblock %}
+
