@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Books, Review, Tour, Registration, Episode
+from .models import Genre
 
 class EpisodeInline(admin.TabularInline):
     model = Episode
@@ -13,6 +14,7 @@ class BooksAdmin(admin.ModelAdmin):
     search_fields = ('title', 'author')
     list_filter = ('created_at',)
     inlines = [EpisodeInline]
+    filter_horizontal = ('genres',)
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
@@ -35,6 +37,11 @@ class EpisodeAdmin(admin.ModelAdmin):
     list_filter = ('book',)
     search_fields = ('book__title', 'title')
     ordering = ('book', 'order')
+
+
+@admin.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    list_display = ('name',)
 
 
 

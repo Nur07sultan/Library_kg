@@ -4,6 +4,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 # === Модель книги ===
 class Books(models.Model):
     title = models.CharField(max_length=100, verbose_name='Название книги')
+    # жанры (ManyToMany) — подойдёт и для аниме-записей, если вы будете хранить их как книги
+    genres = models.ManyToManyField('Genre', blank=True, related_name='books', verbose_name='Жанры')
     description = models.TextField(verbose_name='Описание книги')
     image = models.ImageField(upload_to='books/', verbose_name='Изображение книги')
     quantity_page = models.PositiveIntegerField(verbose_name='Количество страниц')
@@ -92,4 +94,16 @@ class Episode(models.Model):
         verbose_name = 'серия'
         verbose_name_plural = 'серии'
         ordering = ['order']
+
+
+# === Модель жанра ===
+class Genre(models.Model):
+    name = models.CharField(max_length=80, unique=True, verbose_name='Жанр')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'жанр'
+        verbose_name_plural = 'жанры'
 

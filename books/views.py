@@ -6,8 +6,18 @@ from . import models
 
 # === ListView ===
 def book_list_view(request):
-    books = models.Books.objects.all()
-    return render(request, 'books/books_list.html', {'books': books})
+    qs = models.Books.objects.all()
+    q = request.GET.get('q', '').strip()
+    genre = request.GET.get('genre', '').strip()
+    if q:
+        qs = qs.filter(title__icontains=q)
+    if genre:
+        qs = qs.filter(genres__name__iexact=genre)
+
+    # список жанров для фильтра
+    genres = models.Genre.objects.order_by('name').all()
+
+    return render(request, 'books/books_list.html', {'books': qs.distinct(), 'genres': genres, 'q': q, 'selected_genre': genre})
 
 # === DetailView с сериями и отзывами ===
 def book_detail_view(request, id, episode_id=None):

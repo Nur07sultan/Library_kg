@@ -6,161 +6,32 @@
 
     <meta charset="UTF-8">
     <title>{% block title %}Library.kg{% endblock %}</title>
-    <style>
-        /* ===== Основной стиль ===== */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #121212; /* темный фон */
-            color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #1f1f1f;
-            padding: 15px 30px;
-        }
-        nav a {
-            color: #f0f0f0;
-            margin-right: 20px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        nav a:hover {
-            color: #1ed760; /* яркий акцент при наведении */
-        }
-        main {
-            padding: 30px;
-            max-width: 1200px;
-            margin: auto;
-        }
-        footer {
-            text-align: center;
-            padding: 15px;
-            background-color: #1f1f1f;
-            color: #f0f0f0;
-            margin-top: 50px;
-        }
-
-        /* ===== Карточки книг ===== */
-        .books-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .book-card {
-            background-color: #1e1e1e;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.7);
-            padding: 15px;
-            margin: 15px;
-            width: 280px;
-            display: inline-block;
-            vertical-align: top;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .book-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0,0,0,0.8);
-        }
-        .book-card img {
-            width: 100%;
-            height: 420px; 
-            object-fit: cover; 
-            border-radius: 5px;
-        }
-        .book-card h2 {
-            font-size: 20px;
-            margin: 10px 0 5px 0;
-            color: #fff;
-        }
-        .book-card p {
-            font-size: 14px;
-            color: #bbb;
-        }
-
-        /* ===== Кнопки ===== */
-        .btn {
-            display: inline-block;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            text-decoration: none;
-            transition: all 0.3s;
-            text-align: center;
-        }
-        .btn-add {
-            background-color: #1ed760;
-            color: #121212;
-        }
-        .btn-add:hover {
-            background-color: #17c34b;
-            transform: translateY(-2px);
-        }
-        .btn-orders {
-            background-color: #4caf50;
-            color: white;
-        }
-        .btn-orders:hover {
-            background-color: #388e3c;
-            transform: translateY(-2px);
-        }
-        .btn-edit {
-            background-color: #2196F3;
-            color: white;
-        }
-        .btn-edit:hover {
-            background-color: #1976D2;
-            transform: translateY(-2px);
-        }
-        .btn-delete {
-            background-color: #f44336;
-            color: white;
-        }
-        .btn-delete:hover {
-            background-color: #d32f2f;
-            transform: translateY(-2px);
-        }
-
-        /* ===== Формы ===== */
-        form {
-            background-color: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.7);
-            max-width: 500px;
-            margin: auto;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 5px;
-            background-color: #2c2c2c;
-            color: #f0f0f0;
-        }
-        input:focus, textarea:focus, select:focus {
-            outline: 2px solid #1ed760;
-        }
-    </style>
+    <!-- Перенесённые стили layout находятся в static/css/style.css -->
 </head>
 <body>
     <header>
-        <nav>
-            <a href="/">Главная</a>
-            <a href="/clothes/" class="btn btn-add">Магазин</a> <!-- кнопка Магазин сверху -->
-            <a href="{% url 'basket:order_list' %}" class="btn btn-orders">Мои заказы</a>
+        <nav class="nav">
+            <div class="nav-left">
+                <a href="/" class="btn btn-home">Главная</a>
+                <a href="/clothes/" class="btn btn-add">Магазин</a>
+                <a href="{% url 'basket:order_list' %}" class="btn btn-orders">Мои заказы</a>
+            </div>
 
-            {% if user.is_authenticated %}
-                <span style="margin-left:20px; font-weight:bold;">
-                    {{ user.first_name }} {{ user.last_name }}
-                </span>
-                <a href="{% url 'accounts:logout' %}" class="btn btn-delete" style="margin-left:10px;">Выйти</a>
-            {% else %}
-                <a href="{% url 'accounts:login' %}" class="btn btn-add" style="margin-left:10px;">Войти</a>
-                <a href="{% url 'accounts:register' %}" class="btn btn-add" style="margin-left:10px;">Регистрация</a>
-            {% endif %}
+            <div class="nav-right">
+                <!-- Header search (перемещён в шапку) -->
+                <form method="get" action="{% url 'books:book_list' %}" class="header-search" style="display:flex; gap:8px; align-items:center;">
+                    <input type="search" name="q" class="header-search-input" placeholder="Поиск по названию..." value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+                    <button type="submit" class="btn">🔎</button>
+                </form>
+
+                {% if user.is_authenticated %}
+                    <span class="user-name">{{ user.first_name }} {{ user.last_name }}</span>
+                    <a href="{% url 'accounts:logout' %}" class="btn btn-delete">Выйти</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="btn btn-add">Войти</a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-add">Регистрация</a>
+                {% endif %}
+            </div>
         </nav>
     </header>
 
@@ -171,6 +42,7 @@
     <footer>
         &copy; Library.kg 2025
     </footer>
+    <script src="{% static 'js/theme-toggle.js' %}"></script>
 </body>
 </html>
 

@@ -13,6 +13,7 @@
                 {% if item.image %}
                     <img src="{{ item.image.url }}" alt="{{ item.title }}">
                 {% else %}
+                    {% load static %}
                     <img src="{% static 'images/default.png' %}" alt="Нет изображения">
                 {% endif %}
                 <h2>{{ item.title }}</h2>
