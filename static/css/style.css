@@ -19,7 +19,7 @@ body {
   --text: #e6f7ff;
   --muted: #b0b0b0;
   --accent: #00ffff;
-  --accent-2: #ff0096;
+  --accent-2: #007bff; /* changed from pink to blue */
   --input-bg: rgba(35,35,35,0.9);
   --nav-bg: rgba(0,0,0,0.25);
 }
@@ -134,7 +134,7 @@ body::before {
   height: 100%;
   /* Более плотные и контрастные неоновые пятна */
   background: radial-gradient(circle at 18% 18%, rgba(0,255,255,0.14) 0%, transparent 55%),
-              radial-gradient(circle at 82% 82%, rgba(255,0,160,0.12) 0%, transparent 55%),
+              radial-gradient(circle at 82% 82%, rgba(0,123,255,0.12) 0%, transparent 55%),
               radial-gradient(circle at 60% 35%, rgba(128,0,255,0.06) 0%, transparent 50%);
   animation: moveGlow 18s ease-in-out infinite alternate;
   z-index: 0;
@@ -240,19 +240,22 @@ h1, h2, h3 {
   text-decoration: none;
   border: none;
   transition: all 0.25s ease;
-  box-shadow: 0 0 10px rgba(0,255,255,0.06);
+  /* Возвращаем более сильный неоновый свет */
+  box-shadow: 0 6px 30px rgba(0,123,255,0.12), 0 0 40px rgba(0,123,255,0.16);
   cursor: pointer;
+  text-shadow: 0 0 6px rgba(0,123,255,0.18);
 }
 
 .btn:hover {
   background: linear-gradient(90deg, #00ffff, #007bff);
-  box-shadow: 0 0 25px rgba(0,255,255,0.5);
+  /* Яркий glow при ховере */
+  box-shadow: 0 10px 40px rgba(0,123,255,0.24), 0 0 60px rgba(0,123,255,0.28);
   transform: translateY(-3px);
 }
 
 .btn:active {
-  transform: scale(0.97);
-  box-shadow: 0 0 10px rgba(0,255,255,0.3);
+  transform: scale(0.98);
+  box-shadow: 0 6px 30px rgba(0,123,255,0.18), 0 0 30px rgba(0,123,255,0.2) inset;
 }
 
 /* === Кнопки разных задач (но в одном стиле) === */
@@ -271,7 +274,7 @@ h1, h2, h3 {
 
 .book-card {
   background: var(--panel);
-  border: 1px solid rgba(0,255,255,0.08);
+  border: 1px solid rgba(0,123,255,0.08);
   border-radius: 16px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.4);
   padding: 20px;
@@ -281,8 +284,8 @@ h1, h2, h3 {
 
 .book-card:hover {
   transform: translateY(-8px);
-  border-color: rgba(0,255,255,0.4);
-  box-shadow: 0 12px 40px rgba(0,255,255,0.12), 0 0 24px rgba(0,255,255,0.04);
+  border-color: rgba(0,123,255,0.4);
+  box-shadow: 0 12px 40px rgba(0,123,255,0.12), 0 0 24px rgba(0,123,255,0.04);
 }
 
 .book-card img {
@@ -313,7 +316,7 @@ table {
   border-radius: 10px;
   overflow: hidden;
   background: var(--panel);
-  box-shadow: 0 0 30px rgba(0,255,255,0.04);
+  box-shadow: 0 0 30px rgba(0,123,255,0.04);
 }
 
 th, td {
@@ -324,11 +327,11 @@ th, td {
 
 th {
   color: var(--accent);
-  background: rgba(0,255,255,0.04);
+  background: rgba(0,123,255,0.04);
 }
 
 tr:hover {
-  background: rgba(0,255,255,0.07);
+  background: rgba(0,123,255,0.07);
 }
 
 /* Ссылки в таблице */
@@ -349,7 +352,7 @@ form {
   background: var(--panel);
   border-radius: 15px;
   padding: 25px 30px;
-  box-shadow: 0 0 30px rgba(0,255,255,0.05);
+  box-shadow: 0 0 30px rgba(0,123,255,0.05);
 }
 
 form input, form select, form textarea {
@@ -366,7 +369,7 @@ form input, form select, form textarea {
 
 form input:focus, form select:focus, form textarea:focus {
   border-color: #00ffff;
-  box-shadow: 0 0 10px rgba(0,255,255,0.3);
+  box-shadow: 0 0 10px rgba(0,123,255,0.3);
 }
 
 /* === Контейнер рейтинга === */
@@ -438,7 +441,7 @@ form input:focus, form select:focus, form textarea:focus {
 
 .card {
   background: var(--panel);
-  border: 1px solid rgba(0,255,255,0.08);
+  border: 1px solid rgba(0,123,255,0.08);
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.4);
   padding: 15px;

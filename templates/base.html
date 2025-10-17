@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {# Cache-busting: append current unix timestamp so browsers fetch updated CSS #}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now "U" %}">
 
     <meta charset="UTF-8">
     <title>{% block title %}Library.kg{% endblock %}</title>
@@ -42,7 +43,7 @@
     <footer>
         &copy; Library.kg 2025
     </footer>
-    <script src="{% static 'js/theme-toggle.js' %}"></script>
+    <script src="{% static 'js/theme-toggle.js' %}?v={% now "U" %}"></script>
 </body>
 </html>
 
