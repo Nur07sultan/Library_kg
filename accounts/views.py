@@ -1,45 +1,49 @@
-# accounts/views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from django.contrib.auth import login, logout
 from django.contrib import messages
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import FormView, View
+from .forms import CustomUserCreationForm, CustomAuthenticationForm
 
-# ===== Регистрация =====
-def register_view(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # сразу логиним пользователя
-            messages.success(request, f"Добро пожаловать, {user.first_name}!")
-            return redirect('books:book_list')  # <- после регистрации редирект на список книг
-        else:
-            # Если форма невалидна, ошибки покажутся в шаблоне
-            return render(request, 'accounts/register.html', {'form': form})
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'accounts/register.html', {'form': form})
 
-# ===== Логин =====
-def login_view(request):
-    if request.method == 'POST':
-        form = CustomAuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            messages.success(request, f"Вы вошли как {user.first_name} {user.last_name}")
-            return redirect('books:book_list')  # редирект после успешного входа
-        else:
-            return render(request, 'accounts/login.html', {'form': form})
-    else:
-        form = CustomAuthenticationForm()
-    return render(request, 'accounts/login.html', {'form': form})
+class RegisterView(FormView):
+    template_name = 'accounts/register.html'
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('books:book_list')
 
-# ===== Логаут =====
-def logout_view(request):
-    logout(request)
-    messages.info(request, "Вы вышли из аккаунта")
-    return redirect('books:book_list')
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        messages.success(self.request, f"Добро пожаловать, {user.first_name}!")
+        return super().form_valid(form)
+
+
+register_view = RegisterView.as_view()
+
+
+class LoginView(FormView):
+    template_name = 'accounts/login.html'
+    form_class = CustomAuthenticationForm
+    success_url = reverse_lazy('books:book_list')
+
+    def form_valid(self, form):
+        user = form.get_user()
+        login(self.request, user)
+        messages.success(self.request, f"Вы вошли как {user.first_name} {user.last_name}")
+        return super().form_valid(form)
+
+
+login_view = LoginView.as_view()
+
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        messages.info(request, "Вы вышли из аккаунта")
+        return redirect('books:book_list')
+
+
+logout_view = LogoutView.as_view()
 
 
 
