@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now "U" %}">
+    <meta charset="UTF-8">
+    <title>Регистрация — CineBoard</title>
+    <style>
+      body { margin:0; height:100vh; display:flex; align-items:center; justify-content:center; background: linear-gradient(120deg, rgba(5,10,20,1), rgba(10,20,40,1)); color:#fff; }
+      .register-panel { background: rgba(0,0,0,0.6); padding:30px; border-radius:12px; width:90%; max-width:480px; box-shadow: 0 8px 40px rgba(0,123,255,0.12); }
+      .register-panel h1 { margin-top:0; color:#fff; }
+      .register-panel input, .register-panel textarea, .register-panel select { width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: #fff }
+      .register-panel .btn { display:inline-block; margin-top:6px; }
+    </style>
+</head>
+<body>
+  <div class="register-panel">
+    <h1>Регистрация</h1>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      <button class="btn" type="submit">Зарегистрироваться</button>
+    </form>
+    <p style="margin-top:12px; color:#bbb;">Уже есть аккаунт? <a href="{% url 'cineboard:login' %}?next={{ request.GET.next }}">Войти</a></p>
+  </div>
+</body>
+</html>

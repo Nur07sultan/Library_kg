@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}CineBoard{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>CineBoard — Главная</h1>
+  <p>Небольшой плейсхолдер для нового приложения CineBoard. Здесь будут каналы, коллекции и плеер.</p>
+  <a href="{% url 'cineboard:channels' %}" class="btn">Каналы</a>
+</div>
+{% endblock %}

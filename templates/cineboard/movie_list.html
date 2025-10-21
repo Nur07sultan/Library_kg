@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Фильмы{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>Фильмы</h1>
+  <form method="get">
+    <input type="text" name="q" placeholder="Поиск по названию" value="{{ q }}">
+    <select name="genre">
+      <option value="">Все жанры</option>
+      {% for g in genres %}
+        <option value="{{ g.name }}" {% if selected_genre == g.name %}selected{% endif %}>{{ g.name }}</option>
+      {% endfor %}
+    </select>
+    <select name="tag">
+      <option value="">Все теги</option>
+      {% for t in tags %}
+        <option value="{{ t.name }}" {% if selected_tag == t.name %}selected{% endif %}>{{ t.name }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn" type="submit">Найти</button>
+    <a class="btn" href="{% url 'cineboard:movie_add' %}">Добавить фильм</a>
+  </form>
+
+  <div class="books-grid">
+    {% for movie in movies %}
+      <div class="book-card">
+        {% comment %} Poster: if movie has `poster` or `image` field use it, otherwise placeholder {% endcomment %}
+        {% if movie.poster %}
+          <img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster">
+        {% else %}
+          <img src="{% static 'images/poster-placeholder.png' %}" alt="poster placeholder">
+        {% endif %}
+
+        <h2><a href="{% url 'cineboard:movie_detail' id=movie.id %}">{{ movie.title }}</a></h2>
+        <p class="muted">{{ movie.release_date }}</p>
+        <p>{{ movie.description|truncatechars:140 }}</p>
+
+        <div style="margin-top:10px; display:flex; gap:8px;">
+          <a class="btn btn-primary btn-sm" href="{% url 'cineboard:movie_detail' id=movie.id %}">Подробнее</a>
+          {% if request.user.is_authenticated %}
+            <form method="post" action="#" style="display:inline">{% csrf_token %}<button class="btn" type="button">Добавить в список</button></form>
+          {% else %}
+            <a class="btn" href="{% url 'cineboard:login' %}?next={% url 'cineboard:movie_detail' id=movie.id %}">Войти, чтобы добавить</a>
+          {% endif %}
+        </div>
+      </div>
+    {% empty %}
+      <p>Фильмы не найдены.</p>
+    {% endfor %}
+  </div>
+
+  <div style="margin-top:12px;">
+    <a class="btn" href="?sort=rating">Сортировать по рейтингу</a>
+  </div>
+
+  {% if is_paginated %}
+    <div class="pagination">{% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">prev</a>{% endif %} Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">next</a>{% endif %}</div>
+  {% endif %}
+</div>
+{% endblock %}

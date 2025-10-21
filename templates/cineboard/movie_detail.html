@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>{{ movie.title }}</h1>
+  <p>{{ movie.release_date }}</p>
+  <p>{{ movie.description }}</p>
+  <p>Жанры: {% for g in movie.genres.all %}{{ g.name }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}</p>
+  <p>Теги: {% for t in movie.tags.all %}{{ t.name }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}</p>
+  <p>Рейтинг: {{ movie.rating }}</p>
+  <p>Добавил: {{ movie.created_by }}</p>
+  <a class="btn" href="{% url 'cineboard:movie_edit' id=movie.id %}">Редактировать</a>
+  <a class="btn" href="{% url 'cineboard:movie_delete' id=movie.id %}">Удалить</a>
+</div>
+<div class="container" style="margin-top:20px;">
+  <h2>Комментарии</h2>
+  {% for c in comments %}
+    <div class="card">
+      <p><strong>{{ c.user.username }}</strong> — {{ c.created_at|date:"Y-m-d H:i" }} — {% if c.rating %}{{ c.rating }}/5{% endif %}</p>
+      <p>{{ c.text }}</p>
+    </div>
+  {% empty %}
+    <p>Комментариев пока нет.</p>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+    <h3>Оставить комментарий</h3>
+    <form method="post">
+      {% csrf_token %}
+      {{ comment_form.as_p }}
+      <button class="btn" type="submit">Отправить</button>
+    </form>
+  {% else %}
+    <p><a href="{% url 'cineboard:login' %}">Войдите</a>, чтобы оставить комментарий.</p>
+  {% endif %}
+</div>
+{% endblock %}

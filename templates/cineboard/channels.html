@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Каналы CineBoard{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>Каналы</h1>
+  <ul>
+    {% for ch in channels %}
+      <li><a href="#">{{ ch.name }}</a></li>
+    {% empty %}
+      <li>Каналов пока нет.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

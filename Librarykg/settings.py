@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'accounts',
     'captcha',
     'clothes',
-    
+    'CineBoard',
 ]
 
 

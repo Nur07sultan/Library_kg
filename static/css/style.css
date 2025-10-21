@@ -258,6 +258,15 @@ h1, h2, h3 {
   box-shadow: 0 6px 30px rgba(0,123,255,0.18), 0 0 30px rgba(0,123,255,0.2) inset;
 }
 
+/* Small variant of buttons */
+.btn-sm {
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
 /* === Кнопки разных задач (но в одном стиле) === */
 .btn-primary { background: linear-gradient(90deg, #007bff, #00ffff); }
 .btn-danger { background: linear-gradient(90deg, #ff0033, #ff4081); }
@@ -297,9 +306,32 @@ h1, h2, h3 {
 }
 
 .book-card h2 {
-  color: var(--accent);
-  font-size: 20px;
-  margin-bottom: 5px;
+  /* prettier movie title: gradient + neon glow */
+  margin-bottom: 6px;
+  font-size: clamp(18px, 2.6vw, 22px);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  margin-top: 6px;
+  /* gradient text using accent colors */
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  text-shadow: 0 0 8px rgba(0,123,255,0.12), 0 0 22px rgba(0,123,255,0.06);
+}
+
+.book-card h2 a {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 220ms ease, text-shadow 220ms ease;
+}
+
+.book-card h2 a:hover {
+  transform: translateY(-3px) scale(1.02);
+  text-shadow: 0 0 14px rgba(0,255,255,0.22), 0 0 36px rgba(0,123,255,0.18);
 }
 
 .book-card p {
