@@ -6,6 +6,7 @@ from .forms import MovieForm
 from accounts.forms import CustomUserCreationForm, SimpleCustomUserCreationForm, MinimalUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
+from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
@@ -46,9 +47,10 @@ class MovieListView(ListView):
         if tag:
             qs = qs.filter(tags__name__iexact=tag)
         qs = qs.distinct()
+        # annotate average rating from comments for display
+        qs = qs.annotate(avg_rating=Avg('comments__rating'))
         if sort == 'rating':
-            # annotate average rating from comments
-            qs = qs.annotate(avg_rating=Avg('comments__rating')).order_by('-avg_rating')
+            qs = qs.order_by('-avg_rating')
         return qs
 
     def get_context_data(self, **kwargs):
@@ -84,7 +86,9 @@ class MovieDetailView(DetailView):
     def post(self, request, *args, **kwargs):
         # Handle comment submission
         if not request.user.is_authenticated:
-            return redirect('cineboard:login')
+            messages.info(request, 'Войдите, чтобы оставить комментарий.')
+            login_url = reverse('cineboard:login')
+            return redirect(f"{login_url}?next={request.path}")
         self.object = self.get_object()
         form = MovieCommentForm(request.POST)
         if form.is_valid():

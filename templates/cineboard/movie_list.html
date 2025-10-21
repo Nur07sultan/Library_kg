@@ -35,6 +35,18 @@
         {% endif %}
 
         <h2><a href="{% url 'cineboard:movie_detail' id=movie.id %}">{{ movie.title }}</a></h2>
+        {% comment %} Rating always shown under the title (avg from comments, otherwise admin rating or 'Нет рейтинга') {% endcomment %}
+        <div class="rating-inline">
+          {% if movie.avg_rating %}
+            {{ movie.avg_rating|floatformat:1 }}/5
+          {% elif movie.rating and movie.rating.value %}
+            {{ movie.rating.value }}/5
+          {% elif movie.rating %}
+            {{ movie.rating.name }}
+          {% else %}
+            Нет рейтинга
+          {% endif %}
+        </div>
         <p class="muted">{{ movie.release_date }}</p>
         <p>{{ movie.description|truncatechars:140 }}</p>
 
